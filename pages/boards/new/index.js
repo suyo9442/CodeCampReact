@@ -18,17 +18,19 @@ import {
 } from "@/styles/emotions/boardNew";
 import { useMutation, gql } from "@apollo/client";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 const CREATE_BOARD = gql`
     mutation createBoard($createBoardInput: CreateBoardInput!) {
         createBoard(createBoardInput: $createBoardInput) {
             _id
-            user
         }
     }
 `
 
 export default function BoardNewPage() {
+    const router = useRouter();
+
     const [createBoard] = useMutation(CREATE_BOARD);
     const [values, setValues] = useState({
         writer: { value: '', error: '', },
@@ -93,6 +95,7 @@ export default function BoardNewPage() {
         const { _id } = result?.data?.createBoard;
         if (_id) {
             alert(`게시글이 id: ${_id}로 등록되었습니다.`)
+            router.push(`/boards/${_id}`)
         } else {
             alert('게시글 등록 실패')
         }
